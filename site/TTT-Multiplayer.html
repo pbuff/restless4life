@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <style>
+        table {
+            border-collapse: collapse;
+            text-align: center;
+            width: 60%;
+            margin: auto;
+        }
+        tr {
+            border: 2px solid black;
+            width: 100%;
+        }
+        td {
+            border: 2px solid black;
+            width: 33%;
+            padding: 10px;
+        }
+        .div1 {
+            height: 75px;
+            width: 75%;
+            line-height: 75px;
+            background-color: aquamarine;
+            vertical-align: middle;
+            margin: auto;
+            cursor: pointer;
+        }
+        button {
+            background-color: black;
+            border: none;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            /* cursor: pointer; */
+        }
+        a {
+            font-size: 25px;
+        }
+        h1 {
+            font-size: 20px;
+            text-align: center;
+            padding: 40px;
+        }
+        h2, h3 {
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+<title>
+    Tic Tac Toe
+</title>
+<script>
+    var Global = [[0,0,0], [0,0,0], [0,0,0]];
+    var Turn = 1;
+    var Count = 0;
+    var LastTurn = null;
+
+    function ChoosePlayer() { 
+        if (Turn==1) {
+            Turn=2;
+            document.getElementById("Player2").style.backgroundColor = "red";
+            document.getElementById("Player1").style.backgroundColor = "black";
+            MakeMyMove(2);
+        } else {
+            Turn=1;
+            document.getElementById("Player1").style.backgroundColor = "red";
+            document.getElementById("Player2").style.backgroundColor = "black";
+        }
+    }
+    
+    function Validate(player) {
+        var Win = 0;
+        var i;
+        // Check all the rows for straight marks
+        for(i=0; i<=2; i++) {
+            Win = 0;
+            for(var j=0; j<=2; j++) {
+                if (Global[i][j]==player) {
+                    Win++;
+                }
+            }
+            if (Win == 3) return [[i,0],[i,1],[i,2]];
+        }
+
+        // Check all the columns for straight marks
+        for(i=0; i<=2; i++) {
+            Win = 0;
+            for(var j=0; j<=2; j++) {
+                if (Global[j][i]==player) {
+                    Win++;
+                }
+            }
+            if (Win == 3) return [[0,i],[1,i],[2,i]];
+        }
+
+        // Check all the diagnols for straight marks
+        Win = 0;
+        for(var i=0; i<=2; i++) {
+            if (Global[i][i]==player) {
+                Win++;
+            }
+            if (Win == 3) return [[0,0],[1,1],[2,2]];
+        }
+
+        Win = 0;
+        for(var i=2; i>=0; i--) {
+            if (Global[2-i][i]==player) {
+                Win++;
+            }
+            if (Win == 3) return [[0,2],[1,1],[2,0]];
+        }
+        return 0;
+    }
+
+    function MyFunction(x, y)
+    {
+        if (LastTurn == Turn) { 
+            alert("Same player can't select twice.");
+        } else if (Turn == -1) {
+            alert("Game has finished. Reloading to continue.");
+            location.reload();
+        }
+        else { 
+            // console.log("Turn = Player " + Turn);
+            var id = x.toString() + y.toString();
+            if (Global[x][y] == 0) {
+                var s = "X";
+                LastTurn = Turn;
+                Global[x][y] = Turn;
+                Count++;
+                if (Turn==1) {s="0"} else {s="X"};
+                var ID = document.getElementById(id); 
+                ID.innerHTML = s;
+                if (s == "0") { ID.style.color = "red"}
+                if ((x = Validate(Turn)) != 0) {
+                    var t = "PLAYER B";
+                    if (Turn == 1) t = "PLAYER A";
+                    document.getElementsByTagName("h1")[0].innerHTML= t + " WON";
+                    for (var i=0; i<x.length; i++) {
+                        id = "0" + x[i][0].toString() + x[i][1].toString();
+                        ID = document.getElementById(id);
+                        ID.style.backgroundColor = "red";
+                    } 
+                    alert("Congratulations: "+t+ " WON!!");
+                    Turn = -1;
+                    //location.reload();
+                } else if(Count == 9) {
+                    alert("Match is a draw!!");
+                    location.reload();
+                } else
+                    ChoosePlayer();
+                // console.log("Global["+x+"]["+y+"] = "+ Global[x][y]);
+            } else {
+                alert("This box is already taken.");
+            }
+            
+        }
+    }
+</script>
+</header>
+
+<body>
+<h1>Let's play Tic-Tac-Toe together!</h1>
+<h2>Player A starts the game by clicking on any box!</h2>
+
+
+<table align="center">
+    <tr>
+        <td> <div id="000" class="div1" href="#" onclick="MyFunction(0,0)"> <a id="00">-</a></div> </td>
+        <td> <div id="001" class="div1" href="#" onclick="MyFunction(0,1)"> <a id="01">-</a></div> </td>
+        <td> <div id="002" class="div1" href="#" onclick="MyFunction(0,2)"> <a id="02">-</a></div> </td>
+    </tr>
+    <tr>
+        <td> <div id="010" class="div1" href="#" onclick="MyFunction(1,0)"><a id="10">-</a></div> </td>
+        <td> <div id="011" class="div1" href="#" onclick="MyFunction(1,1)"><a id="11">-</a></div> </td>
+        <td> <div id="012" class="div1" href="#" onclick="MyFunction(1,2)"><a id="12">-</a></div> </td>
+    </tr>
+    <tr>
+        <td> <div id="020" class="div1" href="#" onclick="MyFunction(2,0)"><a id="20">-</a></div> </td>
+        <td> <div id="021" class="div1" href="#" onclick="MyFunction(2,1)"><a id="21">-</a></div> </td>
+        <td> <div id="022" class="div1" href="#" onclick="MyFunction(2,2)"><a id="22">-</a></div> </td>
+    </tr>
+</table>
+<div style="width:50%; margin-left:0px; float: left; margin-top: 20px;"><button id="Player1" style="margin-left: 40%; width: 100px; background-color: red;"><a style="font-size: 10px;">PLAYER A (0)</a></button></div>
+<div style="width:50%; margin-right:0px; float: left; margin-top: 20px;"><button id="Player2" style="margin-left: 30%; width: 100px;"><a style="font-size: 10px;">PLAYER B (X)</a></button></div>
+</body>
+</html>
